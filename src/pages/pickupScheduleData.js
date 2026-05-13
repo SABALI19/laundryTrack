@@ -1,0 +1,111 @@
+export const overduePickups = [
+  {
+    id: "LT-2024-0301",
+    customer: "Jennifer Lee",
+    scheduledDate: "March 13, 2:00 PM",
+    overdueText: "2 days overdue",
+    items: 8,
+  },
+  {
+    id: "LT-2024-0302",
+    customer: "Mark Thompson",
+    scheduledDate: "March 14, 10:30 AM",
+    overdueText: "1 day overdue",
+    items: 5,
+  },
+];
+
+export const scheduleSections = [
+  {
+    id: "morning",
+    title: "Morning Slot (9:00 AM - 12:00 PM)",
+    fillText: "5 of 8 slots filled",
+    statusText: "Completed",
+    statusClassName: "bg-[var(--color-primary-soft)] text-[var(--color-primary)]",
+    orders: [
+      {
+        id: "LT-2024-0315",
+        customer: "Sarah Chen",
+        phone: "(555) 123-4567",
+        items: 6,
+        itemBadgeClassName: "bg-[var(--color-primary-soft)] text-[var(--color-primary)]",
+        status: "Ready",
+        statusBadgeClassName: "bg-[var(--color-primary-soft)] text-[var(--color-primary)]",
+        scheduleText: "Scheduled: 10:30 AM",
+        readyText: "",
+        buttonClassName: "",
+      },
+      {
+        id: "LT-2024-0316",
+        customer: "Michael Davis",
+        phone: "(555) 987-6543",
+        items: 4,
+        itemBadgeClassName: "bg-[var(--color-primary-soft)] text-[var(--color-primary)]",
+        status: "In Progress",
+        statusBadgeClassName: "bg-[var(--color-warm-soft)] text-[var(--color-primary)]",
+        scheduleText: "Scheduled: 11:00 AM",
+        readyText: "Ready by 2:30 PM",
+        buttonClassName: "opacity-55",
+      },
+    ],
+  },
+  {
+    id: "afternoon",
+    title: "Afternoon Slot (12:00 PM - 4:00 PM)",
+    fillText: "8 of 10 slots filled",
+    statusText: "Current Slot",
+    statusClassName: "bg-[var(--color-warm-soft)] text-[var(--color-primary)]",
+    orders: [
+      {
+        id: "LT-2024-0317",
+        customer: "Lisa Wang",
+        phone: "(555) 456-7890",
+        items: 9,
+        itemBadgeClassName: "bg-[var(--color-primary-soft)] text-[var(--color-primary)]",
+        status: "Ready",
+        statusBadgeClassName: "bg-[var(--color-primary-soft)] text-[var(--color-primary)]",
+        scheduleText: "Scheduled: 2:15 PM",
+        readyText: "",
+        buttonClassName: "",
+      },
+      {
+        id: "LT-2024-0318",
+        customer: "Robert Taylor",
+        phone: "(555) 789-0123",
+        items: 4,
+        itemBadgeClassName: "bg-[var(--color-primary-soft)] text-[var(--color-primary)]",
+        status: "Not Ready",
+        statusBadgeClassName: "bg-[#dce8f6] text-[var(--color-primary)]",
+        scheduleText: "Scheduled: 4:00 PM",
+        readyText: "Ready by 5:30 PM",
+        buttonClassName: "opacity-55",
+      },
+    ],
+  },
+  {
+    id: "evening",
+    title: "Evening Slot (4:00 PM - 7:00 PM)",
+    fillText: "5 of 6 slots filled",
+    statusText: "Upcoming",
+    statusClassName: "bg-[#dce8f6] text-[var(--color-primary)]",
+    orders: [
+      {
+        id: "LT-2024-0319",
+        customer: "Amanda Brown",
+        phone: "(555) 345-6789",
+        items: 7,
+        itemBadgeClassName: "bg-[var(--color-primary-soft)] text-[var(--color-primary)]",
+        status: "In Progress",
+        statusBadgeClassName: "bg-[var(--color-warm-soft)] text-[var(--color-primary)]",
+        scheduleText: "Scheduled: 6:30 PM",
+        readyText: "Ready by 6:00 PM",
+        buttonClassName: "opacity-55",
+      },
+    ],
+  },
+];
+
+export const pickupScheduleTotalScheduled = scheduleSections.reduce(
+  (total, section) => total + section.orders.length,
+  0,
+);
