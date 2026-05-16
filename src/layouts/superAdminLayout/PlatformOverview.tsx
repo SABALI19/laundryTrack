@@ -59,30 +59,30 @@ const PlatformOverview = () => {
       {stats.map(({ label, value, change, detail, tone, Icon }) => (
         <article
           key={label}
-          className="rounded-2xl bg-white p-7 shadow-[0_4px_18px_rgba(15,23,42,0.10)]"
+          className="rounded-xl bg-white p-5 shadow-[0_4px_16px_rgba(15,23,42,0.08)] ring-1 ring-slate-100"
         >
-          <div className="flex items-start justify-between gap-4">
-            <h3 className="text-xl font-bold text-slate-900">{label}</h3>
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-primary-soft)] text-[var(--color-primary)]">
-              <Icon className="h-5 w-5" />
+          <div className="flex items-start justify-between gap-3">
+            <h3 className="text-base font-medium text-slate-950">{label}</h3>
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--color-primary-soft)] text-[var(--color-primary)]">
+              <Icon className="h-4 w-4" />
             </span>
           </div>
-          <div className="mt-7 flex items-end gap-4">
+          <div className="mt-5 flex items-end gap-3">
             <p
-              className={`text-4xl font-bold tracking-normal ${
+              className={`text-3xl font-bold tracking-normal ${
                 tone === "success" ? "text-emerald-600" : "text-slate-950"
               }`}
             >
               {value}
             </p>
             {change && (
-              <span className="inline-flex items-center gap-1 pb-1 text-sm font-medium text-emerald-600">
-                <TrendingUp className="h-4 w-4" />
+              <span className="inline-flex items-center gap-1 pb-1 text-xs font-medium text-emerald-600">
+                <TrendingUp className="h-3 w-3" />
                 {change}
               </span>
             )}
             {detail && (
-              <span className="pb-1 text-sm font-medium text-slate-500">
+              <span className="pb-1 text-xs font-medium text-slate-500">
                 {detail}
               </span>
             )}

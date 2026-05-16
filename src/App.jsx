@@ -9,6 +9,10 @@ import PublicOnlyRoute from "./components/auth/PublicOnlyRoute.jsx";
 import RequireAuth from "./components/auth/RequireAuth.jsx";
 import Signup from "./components/auth/Signup.jsx";
 import PickupSchedule from "./pages/PickupSchedule.jsx";
+import TenantMgt from "./layouts/superAdminLayout/TenantMgt.jsx";
+import SystemAnalytics from "./layouts/superAdminLayout/SystemAnalytics.jsx";
+import TenantDetails from "./components/common/superadmindashboard/TenantDetails.jsx";
+import NewTenant from "./components/common/superadmindashboard/NewTenant.jsx";
 import { pickupScheduleTotalScheduled } from "./pages/pickupScheduleData.js";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 import AdminAnalytics from "./pages/admin/AdminPerformanceAnalytics.jsx";
@@ -214,11 +218,19 @@ function App() {
               />
               <Route
                 path="/super-admin/tenants"
-                element={<SuperAdminPlaceholderPage page="tenants" />}
+                element={<TenantMgt />}
+              />
+              <Route
+                path="/super-admin/tenants/new"
+                element={<NewTenant />}
+              />
+              <Route
+                path="/super-admin/tenants/:tenantSlug"
+                element={<TenantDetails />}
               />
               <Route
                 path="/super-admin/analytics"
-                element={<SuperAdminPlaceholderPage page="analytics" />}
+                element={<SystemAnalytics />}
               />
               <Route
                 path="/super-admin/settings"

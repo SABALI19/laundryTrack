@@ -7,23 +7,23 @@ const indicators = [
 
 const SystemHealthIndicators = () => {
   return (
-    <section className="min-h-[310px] rounded-2xl bg-white p-7 shadow-[0_4px_18px_rgba(15,23,42,0.10)]">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="text-xl font-bold text-slate-900">System Health Indicators</h2>
-        <span className="inline-flex items-center gap-3 text-sm text-slate-600">
-          <span className="h-2.5 w-2.5 rounded-full bg-emerald-600" />
+    <section className="min-h-[250px] rounded-xl bg-white p-5 shadow-[0_4px_16px_rgba(15,23,42,0.08)] ring-1 ring-slate-100">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-base font-semibold text-slate-900">System Health Indicators</h2>
+        <span className="inline-flex items-center gap-2 text-xs text-slate-600">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
           All systems operational
         </span>
       </div>
 
-      <div className="mt-8 grid gap-x-8 gap-y-7 md:grid-cols-2">
+      <div className="mt-6 grid gap-x-6 gap-y-5 md:grid-cols-2">
         {indicators.map((indicator) => (
           <div key={indicator.label}>
-            <div className="flex items-center justify-between gap-4">
-              <p className="text-base text-slate-600">{indicator.label}</p>
-              <p className="font-bold text-slate-900">{indicator.value}</p>
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-[0.8rem] text-slate-600">{indicator.label}</p>
+              <p className="text-[0.8rem] font-bold text-slate-900">{indicator.value}</p>
             </div>
-            <div className="mt-4 h-3 overflow-hidden rounded-full bg-[var(--color-primary-soft)]">
+            <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-[var(--color-primary-soft)]">
               <div
                 className={`h-full rounded-full ${indicator.color}`}
                 style={{ width: `${indicator.percent}%` }}

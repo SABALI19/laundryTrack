@@ -30,6 +30,7 @@ const variants = {
   secondary:
     "bg-white text-[var(--color-primary)] rounded-md hover:bg-[var(--color-primary)] hover:text-white border border-[var(--color-primary)]",
     regular: "bg-transparent text-[var(--color-primary)] hover:text-[var(--color-primary-hover)]",
+    unstyled: "",
 };
 
   const sizes = {

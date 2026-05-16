@@ -1,5 +1,4 @@
 import { ChevronLeft, ChevronRight, MoreHorizontal, Search } from "lucide-react";
-import Button from "../../components/Button";
 
 const tenants = [
   {
@@ -52,78 +51,77 @@ const filters = ["All", "Premium", "Pro", "Trial"];
 
 const TenantStatusOverView = () => {
   return (
-    <section className="overflow-hidden rounded-2xl bg-white shadow-[0_4px_18px_rgba(15,23,42,0.10)]">
-      <div className="flex flex-col gap-4 border-b border-slate-200 p-6 md:flex-row md:items-center md:justify-between">
-        <h2 className="text-xl font-bold text-slate-900">Tenant Status Overview</h2>
+    <section className="min-w-0 overflow-hidden rounded-xl bg-white shadow-[0_4px_16px_rgba(15,23,42,0.08)] ring-1 ring-slate-100">
+      <div className="flex flex-col gap-3 border-b border-slate-100 px-5 py-4 md:flex-row md:items-center md:justify-between">
+        <h2 className="text-base font-semibold text-slate-900">Tenant Status Overview</h2>
         <div className="flex flex-wrap items-center gap-2">
           {filters.map((filter) => (
-            <Button
+            <button
               key={filter}
-              variant={filter === "All" ? "primary" : "secondary"}
-              size="sm"
-              className={`rounded-full border px-4 py-2 text-sm font-medium ${
+              type="button"
+              className={`h-7 rounded-full border px-3 text-[0.7rem] font-medium transition-colors ${
                 filter === "All"
-                  ? "border-[var(--color-primary)]"
-                  : "border-slate-200 bg-white text-slate-600"
+                  ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-white"
+                  : "border-slate-200 bg-white text-slate-600 hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
               }`}
             >
               {filter}
-            </Button>
+            </button>
           ))}
-          <label className="flex h-10 w-full items-center gap-2 rounded-lg border border-slate-200 px-3 text-sm sm:w-[230px]">
-            <Search className="h-4 w-4 text-slate-400" />
+          <label className="flex h-8 w-full items-center gap-2 rounded-md border border-slate-200 px-3 text-xs sm:w-[195px]">
+            <Search className="h-3.5 w-3.5 text-slate-400" />
             <input
               type="search"
               placeholder="Search tenants..."
-              className="w-full border-0 bg-transparent outline-none placeholder:text-slate-400"
+              className="w-full border-0 bg-transparent text-[0.72rem] outline-none placeholder:text-slate-400"
             />
           </label>
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[760px] text-left">
-          <thead className="bg-[var(--color-surface)] text-sm font-bold text-slate-800">
+      <div className="max-w-full overflow-x-auto overscroll-x-contain scrollbar-hide [touch-action:pan-x]">
+        <table className="w-full min-w-[760px] table-fixed text-left">
+          <thead className="bg-slate-50 text-[0.72rem] font-semibold text-slate-900">
             <tr>
-              <th className="px-6 py-5">Business Name</th>
-              <th className="px-6 py-5">Plan</th>
-              <th className="px-6 py-5">Status</th>
-              <th className="px-6 py-5">Orders (30d)</th>
-              <th className="px-6 py-5">Storage</th>
-              <th className="px-6 py-5">Last Active</th>
-              <th className="px-6 py-5">Action</th>
+              <th className="w-[138px] px-5 py-4">Business Name</th>
+              <th className="w-[116px] px-4 py-4">Plan</th>
+              <th className="w-[120px] px-4 py-4">Status</th>
+              <th className="w-[98px] px-4 py-4">Orders (30d)</th>
+              <th className="w-[108px] px-4 py-4">Storage</th>
+              <th className="w-[108px] px-4 py-4">Last Active</th>
+              <th className="w-[72px] px-4 py-4 text-right">Action</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-200">
+          <tbody className="divide-y divide-slate-100">
             {tenants.map((tenant) => (
-              <tr key={tenant.name} className="text-base text-slate-600">
-                <td className="px-6 py-6 font-bold text-slate-900">{tenant.name}</td>
-                <td className="px-6 py-6">
-                  <span className={`rounded-full px-4 py-1.5 text-sm font-bold ${tenant.planClass}`}>
+              <tr key={tenant.name} className="text-[0.78rem] text-slate-600">
+                <td className="px-5 py-4 font-semibold leading-snug text-slate-900">{tenant.name}</td>
+                <td className="px-4 py-4">
+                  <span className={`rounded-full px-3 py-1 text-[0.7rem] font-medium ${tenant.planClass}`}>
                     {tenant.plan}
                   </span>
                 </td>
-                <td className="px-6 py-6">
-                  <span className="inline-flex items-center gap-3">
-                    <span className={`h-2.5 w-2.5 rounded-full ${tenant.statusClass}`} />
+                <td className="px-4 py-4">
+                  <span className="inline-flex items-center gap-2">
+                    <span className={`h-1.5 w-1.5 rounded-full ${tenant.statusClass}`} />
                     {tenant.status}
                   </span>
                 </td>
-                <td className="px-6 py-6">{tenant.orders}</td>
-                <td className="px-6 py-6">
-                  <span className="inline-flex items-center gap-2 text-sm">
-                    <span className={`h-4 w-1 rounded-full ${tenant.storageClass}`} />
+                <td className="px-4 py-4">{tenant.orders}</td>
+                <td className="px-4 py-4">
+                  <span className="inline-flex items-center gap-2 text-[0.7rem] text-slate-500">
+                    <span className={`h-3 w-0.5 rounded-full ${tenant.storageClass}`} />
                     {tenant.storage}
                   </span>
                 </td>
-                <td className="px-6 py-6">{tenant.active}</td>
-                <td className="px-6 py-6">
+                <td className="px-4 py-4">{tenant.active}</td>
+                <td className="px-4 py-4 text-right">
                   <button
                     type="button"
                     className="rounded-full p-1 text-slate-700 hover:bg-slate-100"
                     aria-label={`Open actions for ${tenant.name}`}
                   >
-                    <MoreHorizontal className="h-5 w-5" />
+                    <MoreHorizontal className="h-4 w-4" />
                   </button>
                 </td>
               </tr>
@@ -132,19 +130,22 @@ const TenantStatusOverView = () => {
         </table>
       </div>
 
-      <div className="flex flex-col gap-4 px-5 py-5 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 px-5 py-3 text-[0.72rem] text-slate-500 sm:flex-row sm:items-center sm:justify-between">
         <span>Showing 1-4 of 247 tenants</span>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <button type="button" className="text-slate-500" aria-label="Previous page">
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft className="h-3.5 w-3.5" />
           </button>
-          <Button size="sm" className="rounded-lg px-4 py-2" fontWeight="bold">
+          <button
+            type="button"
+            className="flex h-7 min-w-7 items-center justify-center rounded-md bg-[var(--color-primary)] px-2 text-xs font-bold text-white"
+          >
             1
-          </Button>
+          </button>
           <button type="button">2</button>
           <button type="button">3</button>
           <button type="button" className="text-slate-500" aria-label="Next page">
-            <ChevronRight className="h-5 w-5" />
+            <ChevronRight className="h-3.5 w-3.5" />
           </button>
         </div>
       </div>

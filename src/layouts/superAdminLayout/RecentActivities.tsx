@@ -6,7 +6,6 @@ import {
   UserPlus,
   Zap,
 } from "lucide-react";
-import Button from "../../components/Button";
 
 const activities = [
   {
@@ -48,26 +47,29 @@ const activities = [
 
 const RecentActivities = () => {
   return (
-    <section className="rounded-2xl bg-white p-6 shadow-[0_4px_18px_rgba(15,23,42,0.10)]">
-      <h2 className="text-xl font-bold text-slate-900">Recent Activity</h2>
-      <div className="mt-7 space-y-6">
+    <section className="rounded-xl bg-white p-4 shadow-[0_4px_16px_rgba(15,23,42,0.08)] ring-1 ring-slate-100">
+      <h2 className="text-[0.95rem] font-semibold text-slate-900">Recent Activity</h2>
+      <div className="mt-4 space-y-3">
         {activities.map(({ title, body, time, Icon, className }) => (
-          <article key={title} className="flex gap-4">
-            <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${className}`}>
-              <Icon className="h-5 w-5" />
+          <article key={title} className="flex gap-2.5">
+            <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${className}`}>
+              <Icon className="h-3 w-3" />
             </span>
-            <div>
-              <h3 className="font-bold text-slate-900">{title}</h3>
-              <p className="mt-1 text-sm text-slate-600">{body}</p>
-              <p className="mt-2 text-sm text-slate-400">{time}</p>
+            <div className="min-w-0">
+              <h3 className="text-[0.76rem] font-bold leading-tight text-slate-900">{title}</h3>
+              <p className="mt-0.5 text-[0.66rem] leading-snug text-slate-600">{body}</p>
+              <p className="mt-0.5 text-[0.62rem] text-slate-400">{time}</p>
             </div>
           </article>
         ))}
       </div>
-      <Button variant="regular" size="sm" className="mx-auto mt-9 flex items-center gap-2">
+      <button
+        type="button"
+        className="mx-auto mt-5 flex items-center gap-1.5 text-[0.68rem] font-medium text-[var(--color-primary)] transition-colors hover:text-[var(--color-primary-hover)]"
+      >
         View all activity
-        <ArrowRight className="h-4 w-4" />
-      </Button>
+        <ArrowRight className="h-3 w-3" />
+      </button>
     </section>
   );
 };

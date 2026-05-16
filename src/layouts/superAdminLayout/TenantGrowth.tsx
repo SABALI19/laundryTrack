@@ -1,5 +1,4 @@
 import { Download } from "lucide-react";
-import Button from "../../components/Button";
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
 const points = [
@@ -16,27 +15,28 @@ const areaPath = `${linePath} L 88 100 L 8 100 Z`;
 
 const TenantGrowth = () => {
   return (
-    <section className="min-h-[310px] rounded-2xl bg-white p-7 shadow-[0_4px_18px_rgba(15,23,42,0.10)]">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="text-xl font-bold text-slate-900">Tenant Growth</h2>
+    <section className="min-h-[250px] rounded-xl bg-white p-5 shadow-[0_4px_16px_rgba(15,23,42,0.08)] ring-1 ring-slate-100">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-base font-semibold text-slate-900">Tenant Growth</h2>
         <div className="flex items-center gap-3">
-          <Button
-            variant="secondary"
-            size="sm"
-            fontWeight="normal"
-            className="rounded-lg border-slate-200 text-slate-700 hover:border-[var(--color-primary)]"
+          <button
+            type="button"
+            className="h-8 rounded-md border border-slate-200 bg-white px-3 text-[0.72rem] font-medium text-slate-700 transition-colors hover:border-[var(--color-primary)]"
           >
             Last 6 months
-          </Button>
-          <Button variant="regular" size="sm" className="inline-flex items-center gap-2">
-            <Download className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            className="inline-flex h-8 items-center gap-1.5 text-[0.72rem] font-medium text-[var(--color-primary)] transition-colors hover:text-[var(--color-primary-hover)]"
+          >
+            <Download className="h-3.5 w-3.5" />
             Export
-          </Button>
+          </button>
         </div>
       </div>
 
-      <div className="mt-8 grid grid-cols-[32px_1fr] gap-x-4">
-        <div className="flex h-[220px] flex-col justify-between text-sm font-bold text-slate-400">
+      <div className="mt-5 grid grid-cols-[28px_1fr] gap-x-3">
+        <div className="flex h-[170px] flex-col justify-between text-[0.7rem] font-medium text-slate-400">
           <span>50</span>
           <span>40</span>
           <span>30</span>
@@ -45,10 +45,10 @@ const TenantGrowth = () => {
           <span>0</span>
         </div>
         <div>
-          <div className="relative h-[220px]">
+          <div className="relative h-[170px]">
             <div className="absolute inset-0 flex flex-col justify-between">
               {Array.from({ length: 6 }).map((_, index) => (
-                <span key={index} className="h-px w-full bg-slate-200" />
+                <span key={index} className="h-px w-full bg-slate-200/80" />
               ))}
             </div>
             <svg
@@ -79,7 +79,7 @@ const TenantGrowth = () => {
               ))}
             </svg>
           </div>
-          <div className="mt-3 grid grid-cols-6 text-center text-sm font-bold text-slate-400">
+          <div className="mt-2 grid grid-cols-6 text-center text-[0.7rem] font-medium text-slate-400">
             {months.map((month) => (
               <span key={month}>{month}</span>
             ))}
