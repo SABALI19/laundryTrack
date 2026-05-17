@@ -159,7 +159,7 @@ const TenantMgt = () => {
 
       <section className="grid gap-5 md:grid-cols-3">
         {summaryStats.map(
-          ({ label, value, change, detail, Icon, iconClass }) => (
+          ({ label, value, change, detail,  iconClass }) => (
             <article
               key={label}
               className="rounded-xl bg-white p-5 shadow-[0_4px_16px_rgba(15,23,42,0.08)] ring-1 ring-slate-100"
