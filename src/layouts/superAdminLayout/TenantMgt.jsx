@@ -10,7 +10,8 @@ import {
   TrendingUp,
   X,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Button from "../../components/Button";
 
 const summaryStats = [
   {
@@ -109,6 +110,8 @@ const tenants = [
 ];
 
 const TenantMgt = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="space-y-5">
       <section className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
@@ -120,13 +123,16 @@ const TenantMgt = () => {
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-          <Link
-            to="/super-admin/tenants/new"
-            className="inline-flex h-10 items-center gap-2 rounded-lg bg-[var(--color-primary)] px-5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-[var(--color-primary-hover)]"
+          <Button
+            variant="primary"
+            size="sm"
+            fontWeight="bold"
+            className="inline-flex h-10 items-center gap-2 whitespace-nowrap rounded-lg px-5 text-xs"
+            onClick={() => navigate("/super-admin/tenants/new")}
           >
             <Plus className="h-3.5 w-3.5" />
             Add New Tenant
-          </Link>
+          </Button>
           <button
             type="button"
             className="inline-flex h-10 items-center gap-2 rounded-lg border border-[var(--color-primary)] bg-white px-5 text-xs font-bold text-[var(--color-primary)] transition-colors hover:bg-[var(--color-primary-soft)]"
@@ -152,35 +158,41 @@ const TenantMgt = () => {
       </section>
 
       <section className="grid gap-5 md:grid-cols-3">
-        {summaryStats.map(({ label, value, change, detail, Icon, iconClass }) => (
-          <article
-            key={label}
-            className="rounded-xl bg-white p-5 shadow-[0_4px_16px_rgba(15,23,42,0.08)] ring-1 ring-slate-100"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <h2 className="text-base font-medium text-slate-950">{label}</h2>
-              <span className={`flex h-8 w-8 items-center justify-center rounded-lg ${iconClass}`}>
-                <Icon className="h-4 w-4" />
-              </span>
-            </div>
-            <div className="mt-5 flex items-end gap-3">
-              <p className="text-3xl font-bold tracking-normal text-slate-950">
-                {value}
-              </p>
-              {change && (
-                <span className="inline-flex items-center gap-1 pb-1 text-xs font-medium text-emerald-600">
-                  <TrendingUp className="h-3 w-3" />
-                  {change}
+        {summaryStats.map(
+          ({ label, value, change, detail, Icon, iconClass }) => (
+            <article
+              key={label}
+              className="rounded-xl bg-white p-5 shadow-[0_4px_16px_rgba(15,23,42,0.08)] ring-1 ring-slate-100"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <h2 className="text-base font-medium text-slate-950">
+                  {label}
+                </h2>
+                <span
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg ${iconClass}`}
+                >
+                  <Icon className="h-4 w-4" />
                 </span>
-              )}
-              {detail && (
-                <span className="pb-1 text-xs font-medium text-slate-500">
-                  {detail}
-                </span>
-              )}
-            </div>
-          </article>
-        ))}
+              </div>
+              <div className="mt-5 flex items-end gap-3">
+                <p className="text-3xl font-bold tracking-normal text-slate-950">
+                  {value}
+                </p>
+                {change && (
+                  <span className="inline-flex items-center gap-1 pb-1 text-xs font-medium text-emerald-600">
+                    <TrendingUp className="h-3 w-3" />
+                    {change}
+                  </span>
+                )}
+                {detail && (
+                  <span className="pb-1 text-xs font-medium text-slate-500">
+                    {detail}
+                  </span>
+                )}
+              </div>
+            </article>
+          ),
+        )}
       </section>
 
       <section className="rounded-xl bg-white p-5 shadow-[0_4px_16px_rgba(15,23,42,0.08)] ring-1 ring-slate-100">
@@ -291,13 +303,17 @@ const TenantMgt = () => {
                     </label>
                   </td>
                   <td className="px-4 py-4">
-                    <span className={`rounded-full px-3 py-1 text-[0.68rem] font-medium ${tenant.tierClass}`}>
+                    <span
+                      className={`rounded-full px-3 py-1 text-[0.68rem] font-medium ${tenant.tierClass}`}
+                    >
                       {tenant.tier}
                     </span>
                   </td>
                   <td className="px-4 py-4">
                     <span className="inline-flex items-center gap-2">
-                      <span className={`h-1.5 w-1.5 rounded-full ${tenant.statusClass}`} />
+                      <span
+                        className={`h-1.5 w-1.5 rounded-full ${tenant.statusClass}`}
+                      />
                       {tenant.status}
                     </span>
                   </td>
@@ -322,7 +338,11 @@ const TenantMgt = () => {
         <div className="flex flex-col gap-3 px-5 py-3 text-[0.72rem] text-slate-500 sm:flex-row sm:items-center sm:justify-between">
           <span>Showing 1-6 of 247 tenants</span>
           <div className="flex items-center gap-3">
-            <button type="button" className="text-slate-500" aria-label="Previous page">
+            <button
+              type="button"
+              className="text-slate-500"
+              aria-label="Previous page"
+            >
               ‹
             </button>
             <button
@@ -335,7 +355,11 @@ const TenantMgt = () => {
             <button type="button">3</button>
             <span>...</span>
             <button type="button">42</button>
-            <button type="button" className="text-slate-500" aria-label="Next page">
+            <button
+              type="button"
+              className="text-slate-500"
+              aria-label="Next page"
+            >
               ›
             </button>
           </div>

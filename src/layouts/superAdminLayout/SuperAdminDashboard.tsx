@@ -1,4 +1,5 @@
 import { Download, Plus, RefreshCw } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
 import PlatformOverview from "./PlatformOverview";
 import RecentActivities from "./RecentActivities";
@@ -7,8 +8,10 @@ import TenantGrowth from "./TenantGrowth";
 import TenantStatusOverView from "./TenantStatusOverView";
 
 const SuperAdminDashboard = () => {
+  const navigate = useNavigate();
+
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 ">
       <section className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <div>
           <h1 className="text-xl font-semibold text-slate-900">
@@ -17,7 +20,12 @@ const SuperAdminDashboard = () => {
           <p className="mt-2 text-xs text-slate-500">Last updated: Today at 2:45 PM</p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <Button className="inline-flex h-10 items-center gap-2 rounded-lg px-5 text-xs shadow-sm" fontWeight="bold">
+          <Button
+            size="sm"
+            className="inline-flex h-10 items-center gap-2 whitespace-nowrap rounded-lg px-5 text-xs"
+            fontWeight="bold"
+            onClick={() => navigate("/super-admin/tenants/new")}
+          >
             <Plus className="h-3.5 w-3.5" />
             Add New Tenant
           </Button>

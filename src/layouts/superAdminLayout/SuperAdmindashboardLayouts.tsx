@@ -34,11 +34,11 @@ const SuperAdmindashboardLayouts = () => {
     <DashboardLayoutContext.Provider value={layoutValue}>
       <div className="h-screen overflow-hidden bg-[#f8fafc] text-slate-900">
         <SuperAdminHeader />
-        <div className="mx-auto grid h-[calc(100vh-52px)] min-h-0 w-full max-w-[1440px] gap-5 overflow-hidden px-4 py-4 sm:px-5 lg:px-7 xl:grid-cols-[220px_minmax(0,1fr)]">
-          <SuperAdminSidebar className="hidden h-full overflow-hidden rounded-r-2xl bg-white/70 px-2 py-3 xl:block" />
-          <main className="min-h-0 min-w-0 overflow-y-auto pr-1 scrollbar-hide">
-            <Outlet />
-          </main>
+        <div className="mx-auto grid h-[calc(100vh-52px)] min-h-0 w-full max-w-[1440px] gap-5 overflow-hidden px-4 py- sm:px-5 lg:px-7 xl:grid-cols-[220px_minmax(0,1fr)]">
+          <SuperAdminSidebar  />
+         <main className="min-h-0 min-w-0 overflow-y-auto p-4 pt-12 scrollbar-hide bg-[#fcfdfd]">
+  <Outlet />
+</main>
         </div>
 
         <div

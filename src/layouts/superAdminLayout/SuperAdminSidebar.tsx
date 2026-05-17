@@ -40,7 +40,7 @@ const SuperAdminSidebar = ({
   const navigate = useNavigate();
 
   return (
-    <aside className={`w-full space-y-3 ${className}`}>
+    <aside className={`w-full space-y-3 pt-10 ${className}`}>
       <div>
         <h2 className="sr-only">
           Navigation
@@ -51,7 +51,9 @@ const SuperAdminSidebar = ({
             const isActive =
               location.pathname === href ||
               (href === "/super-admin/dashboard" &&
-                location.pathname === "/super-admin");
+                location.pathname === "/super-admin") ||
+              (href !== "/super-admin/dashboard" &&
+                location.pathname.startsWith(`${href}/`));
 
             return (
               <SidebarButton
