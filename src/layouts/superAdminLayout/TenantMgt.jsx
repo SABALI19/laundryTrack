@@ -158,8 +158,11 @@ const TenantMgt = () => {
       </section>
 
       <section className="grid gap-5 md:grid-cols-3">
-        {summaryStats.map(
-          ({ label, value, change, detail,  iconClass }) => (
+        {summaryStats.map((stat) => {
+          const { label, value, change, detail, iconClass } = stat;
+          const StatIcon = stat.Icon;
+
+          return (
             <article
               key={label}
               className="rounded-xl bg-white p-5 shadow-[0_4px_16px_rgba(15,23,42,0.08)] ring-1 ring-slate-100"
@@ -171,7 +174,7 @@ const TenantMgt = () => {
                 <span
                   className={`flex h-8 w-8 items-center justify-center rounded-lg ${iconClass}`}
                 >
-                  <Icon className="h-4 w-4" />
+                  <StatIcon className="h-4 w-4" />
                 </span>
               </div>
               <div className="mt-5 flex items-end gap-3">
@@ -191,8 +194,8 @@ const TenantMgt = () => {
                 )}
               </div>
             </article>
-          ),
-        )}
+          );
+        })}
       </section>
 
       <section className="rounded-xl bg-white p-5 shadow-[0_4px_16px_rgba(15,23,42,0.08)] ring-1 ring-slate-100">

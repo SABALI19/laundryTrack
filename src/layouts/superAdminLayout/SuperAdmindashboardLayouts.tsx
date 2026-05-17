@@ -35,7 +35,7 @@ const SuperAdmindashboardLayouts = () => {
       <div className="h-screen overflow-hidden bg-[#f8fafc] text-slate-900">
         <SuperAdminHeader />
         <div className="mx-auto grid h-[calc(100vh-52px)] min-h-0 w-full max-w-[1440px] gap-5 overflow-hidden px-4 py- sm:px-5 lg:px-7 xl:grid-cols-[220px_minmax(0,1fr)]">
-          <SuperAdminSidebar  />
+          <SuperAdminSidebar className="hidden xl:block" />
          <main className="min-h-0 min-w-0 overflow-y-auto p-4 pt-12 scrollbar-hide bg-[#fcfdfd]">
   <Outlet />
 </main>
@@ -60,7 +60,7 @@ const SuperAdmindashboardLayouts = () => {
               isMobileSidebarOpen ? "translate-x-0" : "translate-x-full"
             }`}
           >
-            {mobileSidebarContent}
+            {isMobileSidebarOpen && mobileSidebarContent}
           </aside>
         </div>
       </div>

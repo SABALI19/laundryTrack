@@ -89,19 +89,29 @@ const TenantDetails = () => {
 
       <section className="border-b border-slate-200">
         <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
-          {detailTabs.map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              className={`h-10 shrink-0 rounded-t-lg px-5 text-[0.78rem] font-medium transition-colors ${
-                tab === "Overview"
-                  ? "bg-[var(--color-primary)] text-white"
-                  : "text-slate-600 hover:bg-white hover:text-[var(--color-primary)]"
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
+          {detailTabs.map((tab) =>
+            tab === "Settings" ? (
+              <Link
+                key={tab}
+                to={`/super-admin/tenants/${tenantSlug}/settings`}
+                className="inline-flex h-10 shrink-0 items-center rounded-t-lg px-5 text-[0.78rem] font-medium text-slate-600 transition-colors hover:bg-white hover:text-[var(--color-primary)]"
+              >
+                {tab}
+              </Link>
+            ) : (
+              <button
+                key={tab}
+                type="button"
+                className={`h-10 shrink-0 rounded-t-lg px-5 text-[0.78rem] font-medium transition-colors ${
+                  tab === "Overview"
+                    ? "bg-[var(--color-primary)] text-white"
+                    : "text-slate-600 hover:bg-white hover:text-[var(--color-primary)]"
+                }`}
+              >
+                {tab}
+              </button>
+            ),
+          )}
         </div>
       </section>
 

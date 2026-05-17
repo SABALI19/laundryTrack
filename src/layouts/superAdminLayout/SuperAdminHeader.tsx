@@ -1,94 +1,142 @@
 import {
+  Activity,
+  BarChart3,
   Bell,
-  ChevronDown,
-  PanelRightOpen,
+  Building2,
+  CircleHelp,
+  LayoutDashboard,
+  Menu,
   Search,
   Settings,
+  X,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
 import adminUserImage from "../../assets/images/download (2).jpg";
 import washaLogo from "../../assets/logo/washa-logo-blue.png";
-import { useDashboardLayout } from "../DashboardLayoutContext";
+import Profile from "../../components/common/Profile";
+import useAuthSession from "../../hooks/useAuthSession";
+
+const navigationItems = [
+  { label: "Dashboard", href: "/super-admin/dashboard", Icon: LayoutDashboard },
+  { label: "Tenant Management", href: "/super-admin/tenants", Icon: Building2 },
+  { label: "System Analytics", href: "/super-admin/analytics", Icon: BarChart3 },
+  { label: "Platform Settings", href: "/super-admin/settings", Icon: Settings },
+  { label: "System Health", href: "/super-admin/health", Icon: Activity },
+  { label: "Support & Documentation", href: "/super-admin/support", Icon: CircleHelp },
+];
 
 const SuperAdminHeader = () => {
-  const dashboardLayout = useDashboardLayout();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const storedSession = useAuthSession();
+  const superAdminProfile = {
+    profileImage: adminUserImage,
+    ...(storedSession?.user?.profileImage
+      ? { profileImage: storedSession.user.profileImage }
+      : {}),
+  };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/95 backdrop-blur">
-      <div className="mx-auto flex h-[52px] w-full max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-5 lg:px-7">
-        <div className="flex min-w-0 items-center gap-3">
-          <Link
-            to="/super-admin/dashboard"
-            className="flex min-w-0 items-center gap-2"
-          >
-            <span className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-md bg-[var(--color-primary)]">
-              <img
-                src={washaLogo}
-                alt="LaundryTrack"
-                className="h-5 w-5 object-contain brightness-0 invert"
-              />
-            </span>
-            <span className="truncate text-sm font-semibold text-slate-950">
-              LaundryTrack
-            </span>
-          </Link>
-          <span className="hidden rounded-full bg-[var(--color-primary-soft)] px-3 py-1 text-[0.68rem] font-medium text-[var(--color-primary)] sm:inline-flex">
-            Super Admin
-          </span>
-        </div>
+    <>
+      <header className="sticky  p-4 top-0 z-50 border-b border-slate-200 bg-white">
+        <div className="mx-auto flex h-11 w-full max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-5 lg:px-7">
 
-        <label className="hidden h-9 w-full max-w-[320px] items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 shadow-sm md:flex">
-          <Search className="h-3.5 w-3.5 text-slate-400" />
-          <input
-            type="search"
-            placeholder="Search tenants and users..."
-            className="w-full border-0 bg-transparent text-[0.78rem] text-slate-700 outline-none placeholder:text-slate-400"
-          />
-        </label>
+          {/* Left — hamburger on mobile, logo on desktop */}
+          <div className="flex  min-w-0 items-center gap-5">
+  {/* Hamburger — mobile only */}
+  <button
+    type="button"
+    aria-expanded={isMobileMenuOpen}
+    aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+    onClick={() => setIsMobileMenuOpen((v) => !v)}
+    className="inline-flex h-10 w-10 items-center justify-center   bg-white text-[var(--color-primary)]  transition-colors hover:border-[var(--color-primary)] xl:hidden"
+  >
+    {isMobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-10 w-10" />}
+  </button>
 
-        <div className="flex shrink-0 items-center gap-2.5">
-          <button
-            type="button"
-            className="relative inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 hover:text-[var(--color-primary)]"
-            aria-label="Notifications"
-          >
-            <Bell className="h-4 w-4" />
-            <span className="absolute right-1 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--color-primary)] px-1 text-[0.62rem] font-semibold text-white">
-              3
-            </span>
-          </button>
-          <button
-            type="button"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 hover:text-[var(--color-primary)]"
-            aria-label="Super admin settings"
-          >
-            <Settings className="h-4 w-4" />
-          </button>
-          <img
-            src={adminUserImage}
-            alt="Super Admin"
-            className="h-8 w-8 rounded-full border border-slate-200 object-cover"
-          />
-          <button
-            type="button"
-            className="hidden h-8 w-6 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 sm:inline-flex"
-            aria-label="Open account menu"
-          >
-            <ChevronDown className="h-4 w-4" />
-          </button>
-          {dashboardLayout?.hasMobileSidebar && (
+  {/* Logo — always visible */}
+  <Link
+    to="/super-admin/dashboard"
+    className="flex  items-center gap-1.5"
+  >
+    <span className="">
+      <img
+        src={washaLogo}
+        alt="LaundryTrack"
+        className="h-3.5 w-3.5 object-contain brightness-0 invert hidden xl:flex"
+      />
+    </span>
+    <span className="truncate text-lg font-semibold text-slate-950">
+      LaundryTrack
+    </span>
+  </Link>
+
+  <span className="hidden rounded-full bg-[var(--color-primary-soft)] px-2.5 py-1 text-[0.58rem] font-semibold text-[var(--color-primary)] sm:inline-flex">
+    Super Admin
+  </span>
+</div>
+
+          {/* Center — search */}
+          <label className="hidden h-8 w-full max-w-[340px] items-center gap-2 rounded-md border border-slate-200 bg-white px-3 md:flex">
+            <Search className="h-3 w-3 text-slate-400" />
+            <input
+              type="search"
+              placeholder="Search tenants and users..."
+              className="w-full border-0 bg-transparent text-[0.68rem] text-slate-700 outline-none placeholder:text-slate-400"
+            />
+          </label>
+
+          {/* Right — actions */}
+          <div className="flex shrink-0 items-center gap-2">
             <button
               type="button"
-              onClick={dashboardLayout.openMobileSidebar}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] xl:hidden"
-              aria-label="Open dashboard sidebar"
+              className="relative inline-flex h-7 w-7 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 hover:text-[var(--color-primary)]"
+              aria-label="Notifications"
             >
-              <PanelRightOpen className="h-3.5 w-3.5" />
+              <Bell className="h-3.5 w-3.5" />
+              <span className="absolute right-0.5 top-0 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-[var(--color-primary)] px-0.5 text-[0.5rem] font-semibold text-white">
+                3
+              </span>
             </button>
-          )}
+            <button
+              type="button"
+              className="inline-flex h-7 w-7 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 hover:text-[var(--color-primary)]"
+              aria-label="Super admin settings"
+            >
+              <Settings className="h-3.5 w-3.5" />
+            </button>
+            <span className="hidden h-5 w-px bg-slate-200 sm:block" />
+            <Profile user={superAdminProfile} size="sm" />
+            {/* PanelRightOpen button removed */}
+          </div>
         </div>
-      </div>
-    </header>
+
+        {/* Mobile dropdown menu */}
+        {isMobileMenuOpen && (
+          <div className="border-t border-slate-100 bg-white px-4 py-3 shadow-sm xl:hidden">
+            <nav className="space-y-1">
+              {navigationItems.map(({ label, href, Icon }) => (
+                <NavLink
+                  key={label}
+                  to={href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 rounded-lg px-4 py-2.5 text-[0.8rem] font-bold transition-colors ${
+                      isActive
+                        ? "bg-[var(--color-primary)] text-white"
+                        : "text-slate-600 hover:bg-[var(--color-primary-soft)] hover:text-[var(--color-primary)]"
+                    }`
+                  }
+                >
+                  <Icon className="h-3.5 w-3.5 shrink-0" />
+                  <span>{label}</span>
+                </NavLink>
+              ))}
+            </nav>
+          </div>
+        )}
+      </header>
+    </>
   );
 };
 

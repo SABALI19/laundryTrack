@@ -16,7 +16,7 @@ const defaultNavigationItems = [
 const DashboardHeader = ({
   user,
   variant = "default",
-  brandLabel = "Washa",
+  brandLabel = "laundryTrack",
   navigationItems = defaultNavigationItems,
   backLink = "/dashboard/customer",
   backLabel = "Back to Dashboard",

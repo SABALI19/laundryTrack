@@ -10,6 +10,7 @@ import RequireAuth from "./components/auth/RequireAuth.jsx";
 import Signup from "./components/auth/Signup.jsx";
 import PickupSchedule from "./pages/PickupSchedule.jsx";
 import TenantMgt from "./layouts/superAdminLayout/TenantMgt.jsx";
+import TenantMgtSettings from "./layouts/superAdminLayout/TenantMgtSettings.jsx";
 import SystemAnalytics from "./layouts/superAdminLayout/SystemAnalytics.jsx";
 import TenantDetails from "./components/common/superadmindashboard/TenantDetails.jsx";
 import NewTenant from "./components/common/superadmindashboard/NewTenant.jsx";
@@ -227,6 +228,10 @@ function App() {
               <Route
                 path="/super-admin/tenants/:tenantSlug"
                 element={<TenantDetails />}
+              />
+              <Route
+                path="/super-admin/tenants/:tenantSlug/settings"
+                element={<TenantMgtSettings />}
               />
               <Route
                 path="/super-admin/analytics"
