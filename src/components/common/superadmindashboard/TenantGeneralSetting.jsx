@@ -1,13 +1,6 @@
 import { Clock3 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import Button from "../../Button";
-
-const businessFields = [
-  { label: "Tenant Status", value: "Active" },
-  { label: "Timezone", value: "Eastern Time (UTC-5)" },
-  { label: "Currency", value: "USD ($)" },
-  { label: "Date Format", value: "MM/DD/YYYY" },
-  { label: "Language Preference", value: "English" },
-];
 
 const operationalHours = [
   { day: "Monday", start: "09:00 AM", end: "06:00 PM", closed: false },
@@ -19,27 +12,31 @@ const operationalHours = [
   { day: "Sunday", start: "12:00 PM", end: "05:00 PM", closed: true },
 ];
 
-const TextField = ({ label, value }) => (
+const TextField = ({ label, name, onChange, value }) => (
   <label className="space-y-2">
     <span className="text-[0.78rem] font-bold text-slate-900">{label}</span>
     <input
       type="text"
-      defaultValue={value}
+      name={name}
+      value={value}
+      onChange={onChange}
       className="h-12 w-full rounded-lg border border-slate-200 bg-white px-4 text-sm text-slate-700 outline-none transition-colors focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-soft)]"
     />
   </label>
 );
 
-const Toggle = ({ label, defaultChecked = false }) => (
+const Toggle = ({ checked = false, label, name, onChange }) => (
   <label className="inline-flex items-center gap-3">
     <span
       className={`relative inline-flex h-7 w-12 rounded-full transition-colors ${
-        defaultChecked ? "bg-[var(--color-primary)]" : "bg-[var(--color-primary-soft)]"
+        checked ? "bg-[var(--color-primary)]" : "bg-[var(--color-primary-soft)]"
       }`}
     >
       <input
         type="checkbox"
-        defaultChecked={defaultChecked}
+        name={name}
+        checked={checked}
+        onChange={onChange}
         className="peer sr-only"
       />
       <span className="absolute left-1 top-1 h-5 w-5 rounded-full bg-white transition-transform peer-checked:translate-x-5" />
@@ -59,7 +56,81 @@ const TimeInput = ({ value }) => (
   </label>
 );
 
-const TenantGeneralSetting = () => {
+const getGeneralSettings = (settings = {}) => settings.general || settings;
+
+const TenantGeneralSetting = ({ onSave, settings }) => {
+  const generalSettings = useMemo(() => getGeneralSettings(settings), [settings]);
+  const [formData, setFormData] = useState({
+    autoReplyEnabled: false,
+    currency: "USD ($)",
+    customerServiceEmailTemplate: "Standard Support Template",
+    dateFormat: "MM/DD/YYYY",
+    languagePreference: "English",
+    supportEmail: "support@cleanexpress.com",
+    supportPhone: "+1 (555) 123-4567",
+    tenantStatus: "Active",
+    timeFormat24Hour: false,
+    timezone: "Eastern Time (UTC-5)",
+  });
+  const [saveError, setSaveError] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    setFormData((current) => ({
+      ...current,
+      autoReplyEnabled:
+        generalSettings.autoReplyEnabled ??
+        generalSettings.autoReplySettings?.enabled ??
+        current.autoReplyEnabled,
+      currency: generalSettings.currency || current.currency,
+      customerServiceEmailTemplate:
+        generalSettings.customerServiceEmailTemplate ||
+        current.customerServiceEmailTemplate,
+      dateFormat: generalSettings.dateFormat || current.dateFormat,
+      languagePreference:
+        generalSettings.languagePreference || generalSettings.language || current.languagePreference,
+      supportEmail:
+        generalSettings.supportEmail ||
+        generalSettings.contact?.supportEmail ||
+        current.supportEmail,
+      supportPhone:
+        generalSettings.supportPhone ||
+        generalSettings.contact?.supportPhone ||
+        current.supportPhone,
+      tenantStatus:
+        generalSettings.tenantStatus || generalSettings.status || current.tenantStatus,
+      timeFormat24Hour:
+        generalSettings.timeFormat24Hour ??
+        (generalSettings.timeFormat
+          ? generalSettings.timeFormat === "24-hour"
+          : current.timeFormat24Hour),
+      timezone: generalSettings.timezone || current.timezone,
+    }));
+  }, [generalSettings]);
+
+  const handleChange = (event) => {
+    const { checked, name, type, value } = event.target;
+    setFormData((current) => ({
+      ...current,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleSave = async () => {
+    if (!onSave) return;
+
+    setSaveError("");
+    setIsSaving(true);
+
+    try {
+      await onSave(formData);
+    } catch (error) {
+      setSaveError(error.message || "Unable to save general settings.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <section className="rounded-xl bg-white p-5 shadow-[0_4px_16px_rgba(15,23,42,0.08)] ring-1 ring-slate-100 sm:p-6">
@@ -68,18 +139,29 @@ const TenantGeneralSetting = () => {
         </h2>
 
         <div className="mt-6 grid gap-6 lg:grid-cols-2">
-          {businessFields.slice(0, 4).map((field) => (
-            <TextField key={field.label} {...field} />
-          ))}
+          <TextField label="Tenant Status" name="tenantStatus" value={formData.tenantStatus} onChange={handleChange} />
+          <TextField label="Timezone" name="timezone" value={formData.timezone} onChange={handleChange} />
+          <TextField label="Currency" name="currency" value={formData.currency} onChange={handleChange} />
+          <TextField label="Date Format" name="dateFormat" value={formData.dateFormat} onChange={handleChange} />
           <div className="space-y-2">
             <span className="text-[0.78rem] font-bold text-slate-900">
               Time Format
             </span>
             <div className="flex h-12 items-center">
-              <Toggle label="24-hour format" />
+              <Toggle
+                checked={formData.timeFormat24Hour}
+                label="24-hour format"
+                name="timeFormat24Hour"
+                onChange={handleChange}
+              />
             </div>
           </div>
-          <TextField {...businessFields[4]} />
+          <TextField
+            label="Language Preference"
+            name="languagePreference"
+            value={formData.languagePreference}
+            onChange={handleChange}
+          />
         </div>
       </section>
 
@@ -134,39 +216,68 @@ const TenantGeneralSetting = () => {
         </h2>
 
         <div className="mt-6 grid gap-6 lg:grid-cols-2">
-          <TextField label="Support Email Address" value="support@cleanexpress.com" />
-          <TextField label="Support Phone Number" value="+1 (555) 123-4567" />
+          <TextField
+            label="Support Email Address"
+            name="supportEmail"
+            value={formData.supportEmail}
+            onChange={handleChange}
+          />
+          <TextField
+            label="Support Phone Number"
+            name="supportPhone"
+            value={formData.supportPhone}
+            onChange={handleChange}
+          />
           <TextField
             label="Customer Service Email Template"
-            value="Standard Support Template"
+            name="customerServiceEmailTemplate"
+            value={formData.customerServiceEmailTemplate}
+            onChange={handleChange}
           />
           <div className="space-y-2">
             <span className="text-[0.78rem] font-bold text-slate-900">
               Auto-reply Settings
             </span>
             <div className="flex h-12 items-center">
-              <Toggle label="Enable auto-reply for support emails" />
+              <Toggle
+                checked={formData.autoReplyEnabled}
+                label="Enable auto-reply for support emails"
+                name="autoReplyEnabled"
+                onChange={handleChange}
+              />
             </div>
           </div>
         </div>
       </section>
 
+      {saveError && (
+        <p className="rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
+          {saveError}
+        </p>
+      )}
+
       <section className="flex flex-col gap-4 rounded-xl bg-white p-5 shadow-[0_4px_16px_rgba(15,23,42,0.08)] ring-1 ring-slate-100 sm:flex-row sm:items-center sm:justify-between sm:p-6">
         <div className="flex flex-wrap items-center gap-3">
           <Button
+            type="button"
+            onClick={handleSave}
+            disabled={isSaving}
             size="sm"
             fontWeight="bold"
             className="inline-flex h-11 items-center rounded-lg px-6 text-xs"
           >
-            Save All Changes
+            {isSaving ? "Saving..." : "Save All Changes"}
           </Button>
           <Button
+            type="button"
+            onClick={handleSave}
+            disabled={isSaving}
             variant="secondary"
             size="sm"
             fontWeight="bold"
             className="inline-flex h-11 items-center rounded-lg px-6 text-xs"
           >
-            Apply Changes
+            {isSaving ? "Applying..." : "Apply Changes"}
           </Button>
           <button
             type="button"

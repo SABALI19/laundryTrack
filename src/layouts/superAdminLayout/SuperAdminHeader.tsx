@@ -13,7 +13,7 @@ import {
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import adminUserImage from "../../assets/images/download (2).jpg";
-import washaLogo from "../../assets/logo/washa-logo-blue.png";
+import WashaLogo from "../../assets/logo/washa-logo-blue.png";
 import Profile from "../../components/common/Profile";
 import useAuthSession from "../../hooks/useAuthSession";
 
@@ -61,7 +61,7 @@ const SuperAdminHeader = () => {
   >
     <span className="">
       <img
-        src={washaLogo}
+        src={WashaLogo}
         alt="LaundryTrack"
         className="h-3.5 w-3.5 object-contain brightness-0 invert hidden xl:flex"
       />

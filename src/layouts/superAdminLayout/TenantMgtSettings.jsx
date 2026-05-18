@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, ChevronRight, RotateCcw, Save } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import Button from "../../components/Button";
 import TenantGeneralSetting from "../../components/common/superadmindashboard/TenantGeneralSetting";
+import { apiRequest } from "../../utils/auth";
+import {
+  normalizeTenantDetailResponse,
+  normalizeTenantSettingsResponse,
+} from "../../utils/superadminTenants";
 
 const tenantNameBySlug = {
   "clean-express": "Clean Express",
@@ -124,13 +129,73 @@ const ComingSoonPanel = ({ label }) => (
 
 const TenantMgtSettings = () => {
   const { tenantSlug } = useParams();
-  const tenantName = formatTenantName(tenantSlug);
+  const [tenant, setTenant] = useState(null);
+  const [settings, setSettings] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [settingsError, setSettingsError] = useState("");
   const [activeTab, setActiveTab] = useState("general");
+  const tenantName = tenant?.name || formatTenantName(tenantSlug);
+  const tenantStatus = tenant?.status || "Active";
   const activeTabLabel =
     tabs.find((tab) => tab.id === activeTab)?.label || "General Settings";
 
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadSettings = async () => {
+      setIsLoading(true);
+      setSettingsError("");
+
+      try {
+        const [tenantData, settingsData] = await Promise.all([
+          apiRequest(`/superadmin/tenants/${tenantSlug}`),
+          apiRequest(`/superadmin/tenants/${tenantSlug}/settings`),
+        ]);
+
+        if (isMounted) {
+          setTenant(normalizeTenantDetailResponse(tenantData));
+          setSettings(normalizeTenantSettingsResponse(settingsData));
+        }
+      } catch (error) {
+        if (isMounted) {
+          setSettingsError(error.message || "Unable to load tenant settings.");
+          setTenant(null);
+          setSettings(null);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadSettings();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [tenantSlug]);
+
+  const handleSaveGeneralSettings = async (generalSettings) => {
+    const data = await apiRequest(
+      `/superadmin/tenants/${tenantSlug}/settings/general`,
+      {
+        body: JSON.stringify(generalSettings),
+        method: "PATCH",
+      },
+    );
+    setSettings(normalizeTenantSettingsResponse(data));
+  };
+
   const renderActiveTab = () => {
-    if (activeTab === "general") return <TenantGeneralSetting />;
+    if (activeTab === "general") {
+      return (
+        <TenantGeneralSetting
+          settings={settings}
+          onSave={handleSaveGeneralSettings}
+        />
+      );
+    }
     if (activeTab === "features") return <FeatureFlags />;
     if (activeTab === "resources") return <ResourceLimits />;
 
@@ -166,7 +231,7 @@ const TenantMgtSettings = () => {
               </h1>
               <span className="inline-flex items-center gap-2 text-sm text-slate-600">
                 <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                Active
+                {isLoading ? "Loading" : tenantStatus}
               </span>
             </div>
             <p className="mt-5 text-sm text-slate-500">
@@ -203,6 +268,12 @@ const TenantMgtSettings = () => {
           </div>
         </div>
       </section>
+
+      {settingsError && (
+        <p className="rounded-lg bg-orange-50 px-4 py-3 text-xs font-medium text-orange-700">
+          {settingsError} Showing mock tenant settings until the API responds.
+        </p>
+      )}
 
       <section className="border-b border-slate-200">
         <div className="flex items-center gap-5 overflow-x-auto scrollbar-hide">

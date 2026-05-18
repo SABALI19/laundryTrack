@@ -1,4 +1,5 @@
 import { ExternalLink, MoreVertical, Pencil } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import BusinessProfile from "./BusinessProfile";
 import SubscriptionBilling from "./Subscription&Billing";
@@ -6,6 +7,8 @@ import UsageStatistics from "./UsageStatistics";
 import Configuration from "./Configuration";
 import AdministrativeControl from "./AdministrativeControl";
 import RecentActivity from "./RecentActivity";
+import { apiRequest } from "../../../utils/auth";
+import { normalizeTenantDetailResponse } from "../../../utils/superadminTenants";
 
 const tenantNameBySlug = {
   "clean-express": "Clean Express",
@@ -35,7 +38,44 @@ const detailTabs = [
 
 const TenantDetails = () => {
   const { tenantSlug } = useParams();
-  const tenantName = formatTenantName(tenantSlug);
+  const [tenant, setTenant] = useState(null);
+  const [isLoadingTenant, setIsLoadingTenant] = useState(true);
+  const [tenantError, setTenantError] = useState("");
+  const tenantName = tenant?.name || formatTenantName(tenantSlug);
+  const tenantStatus = tenant?.status || "Active";
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadTenant = async () => {
+      setIsLoadingTenant(true);
+      setTenantError("");
+
+      try {
+        const data = await apiRequest(`/superadmin/tenants/${tenantSlug}`);
+        const normalizedTenant = normalizeTenantDetailResponse(data);
+
+        if (isMounted) {
+          setTenant(normalizedTenant);
+        }
+      } catch (error) {
+        if (isMounted) {
+          setTenantError(error.message || "Unable to load tenant details.");
+          setTenant(null);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoadingTenant(false);
+        }
+      }
+    };
+
+    loadTenant();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [tenantSlug]);
 
   return (
     <div className="space-y-5">
@@ -51,13 +91,19 @@ const TenantDetails = () => {
           <span className="text-slate-600">{tenantName}</span>
         </nav>
 
+        {tenantError && (
+          <p className="rounded-lg bg-orange-50 px-4 py-3 text-xs font-medium text-orange-700">
+            {tenantError} Showing mock tenant details until the API responds.
+          </p>
+        )}
+
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-center gap-3">
             <h1 className="text-xl font-semibold text-slate-950">
               {tenantName}
             </h1>
             <span className="rounded-full bg-emerald-100 px-3 py-1 text-[0.72rem] font-semibold text-emerald-700">
-              Active
+              {isLoadingTenant ? "Loading" : tenantStatus}
             </span>
           </div>
 

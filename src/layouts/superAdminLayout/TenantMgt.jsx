@@ -10,8 +10,14 @@ import {
   TrendingUp,
   X,
 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
+import { apiRequest } from "../../utils/auth";
+import {
+  formatCurrency,
+  normalizeTenantListResponse,
+} from "../../utils/superadminTenants";
 
 const summaryStats = [
   {
@@ -109,8 +115,89 @@ const tenants = [
   },
 ];
 
+const getTenantTierClass = (tier = "") => {
+  const normalizedTier = String(tier).toLowerCase();
+
+  if (normalizedTier.includes("enterprise")) return "bg-cyan-100 text-cyan-700";
+  if (normalizedTier.includes("professional")) {
+    return "bg-[var(--color-primary-soft)] text-[var(--color-primary)]";
+  }
+  if (normalizedTier.includes("trial")) return "bg-orange-100 text-orange-600";
+
+  return "bg-emerald-50 text-emerald-700";
+};
+
+const getTenantStatusClass = (status = "") => {
+  const normalizedStatus = String(status).toLowerCase();
+
+  if (normalizedStatus.includes("suspend")) return "bg-red-500";
+  if (normalizedStatus.includes("trial")) return "bg-orange-500";
+  if (normalizedStatus.includes("inactive")) return "bg-slate-400";
+
+  return "bg-emerald-500";
+};
+
 const TenantMgt = () => {
   const navigate = useNavigate();
+  const [apiTenants, setApiTenants] = useState([]);
+  const [isLoadingTenants, setIsLoadingTenants] = useState(true);
+  const [tenantError, setTenantError] = useState("");
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadTenants = async () => {
+      setIsLoadingTenants(true);
+      setTenantError("");
+
+      try {
+        const data = await apiRequest("/superadmin/tenants");
+        const normalizedTenants = normalizeTenantListResponse(data);
+
+        if (isMounted) {
+          setApiTenants(normalizedTenants);
+        }
+      } catch (error) {
+        if (isMounted) {
+          setTenantError(error.message || "Unable to load tenants.");
+          setApiTenants([]);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoadingTenants(false);
+        }
+      }
+    };
+
+    loadTenants();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const displayedTenants = useMemo(
+    () =>
+      apiTenants.length > 0
+        ? apiTenants.map((tenant) => ({
+            ...tenant,
+            revenue: formatCurrency(tenant.monthlyRevenue),
+            statusClass: getTenantStatusClass(tenant.status),
+            tier: tenant.subscriptionTier,
+            tierClass: getTenantTierClass(tenant.subscriptionTier),
+            users: tenant.activeUsers,
+          }))
+        : tenants,
+    [apiTenants],
+  );
+
+  const totalTenants = apiTenants.length || tenants.length;
+  const activeTenants = displayedTenants.filter(
+    (tenant) => String(tenant.status).toLowerCase() === "active",
+  ).length;
+  const trialTenants = displayedTenants.filter((tenant) =>
+    String(tenant.status).toLowerCase().includes("trial"),
+  ).length;
 
   return (
     <div className="space-y-5">
@@ -119,7 +206,9 @@ const TenantMgt = () => {
           <h1 className="text-xl font-semibold text-slate-950">
             Tenant Management
           </h1>
-          <p className="mt-2 text-xs text-slate-500">247 total tenants</p>
+          <p className="mt-2 text-xs text-slate-500">
+            {totalTenants} total tenants
+          </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
@@ -161,6 +250,12 @@ const TenantMgt = () => {
         {summaryStats.map((stat) => {
           const { label, value, change, detail, iconClass } = stat;
           const StatIcon = stat.Icon;
+          const resolvedValue =
+            label === "Total Active Tenants"
+              ? activeTenants
+              : label === "Tenants on Trial"
+                ? trialTenants
+                : value;
 
           return (
             <article
@@ -179,7 +274,7 @@ const TenantMgt = () => {
               </div>
               <div className="mt-5 flex items-end gap-3">
                 <p className="text-3xl font-bold tracking-normal text-slate-950">
-                  {value}
+                  {resolvedValue}
                 </p>
                 {change && (
                   <span className="inline-flex items-center gap-1 pb-1 text-xs font-medium text-emerald-600">
@@ -267,6 +362,11 @@ const TenantMgt = () => {
       </section>
 
       <section className="min-w-0 overflow-hidden rounded-xl bg-white shadow-[0_4px_16px_rgba(15,23,42,0.08)] ring-1 ring-slate-100">
+        {tenantError && (
+          <div className="border-b border-orange-100 bg-orange-50 px-5 py-3 text-xs font-medium text-orange-700">
+            {tenantError} Showing mock tenant records until the API responds.
+          </div>
+        )}
         <div className="max-w-full overflow-x-auto overscroll-x-contain scrollbar-hide [touch-action:pan-x]">
           <table className="w-full min-w-[860px] table-fixed text-left">
             <thead className="bg-slate-50 text-[0.72rem] font-semibold text-slate-900">
@@ -289,8 +389,11 @@ const TenantMgt = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {tenants.map((tenant) => (
-                <tr key={tenant.name} className="text-[0.78rem] text-slate-600">
+              {displayedTenants.map((tenant) => (
+                <tr
+                  key={tenant.id || tenant.name}
+                  className="text-[0.78rem] text-slate-600"
+                >
                   <td className="px-5 py-4">
                     <label className="inline-flex min-w-0 items-center gap-3">
                       <input
@@ -298,7 +401,7 @@ const TenantMgt = () => {
                         className="h-3.5 w-3.5 shrink-0 rounded border-slate-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)]"
                       />
                       <Link
-                        to={`/super-admin/tenants/${getTenantSlug(tenant.name)}`}
+                        to={`/super-admin/tenants/${tenant.id || getTenantSlug(tenant.name)}`}
                         className="truncate font-semibold text-[var(--color-primary)] transition-colors hover:text-[var(--color-primary-hover)]"
                       >
                         {tenant.name}
@@ -339,7 +442,11 @@ const TenantMgt = () => {
         </div>
 
         <div className="flex flex-col gap-3 px-5 py-3 text-[0.72rem] text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-          <span>Showing 1-6 of 247 tenants</span>
+          <span>
+            {isLoadingTenants
+              ? "Loading tenants..."
+              : `Showing 1-${displayedTenants.length} of ${totalTenants} tenants`}
+          </span>
           <div className="flex items-center gap-3">
             <button
               type="button"
